@@ -1,6 +1,5 @@
 import React from 'react';
-import type { AnimatedRef, SharedValue } from 'react-native-reanimated';
-import Animated from 'react-native-reanimated';
+import type { SharedValue } from 'react-native-reanimated';
 import type {
   OutOfRangeProps,
   PackedEvent,
@@ -58,8 +57,6 @@ export interface BodyContextProps {
   allowDragToCreate: boolean;
   allowDragToEdit: boolean;
   dragToCreateMode?: 'duration' | 'date-time';
-  verticalListRef: AnimatedRef<Animated.ScrollView>;
-  gridListRef: AnimatedRef<Animated.ScrollView>;
 }
 
 export const BodyContext = React.createContext<BodyContextProps | undefined>(

@@ -104,10 +104,12 @@ const CalendarBody: React.FC<CalendarBodyProps> = ({
   }));
 
   const { pinchGesture, pinchGestureRef } = usePinchToZoom();
-  const dragEventGesture = useDragEventGesture();
-  const dragToCreateGesture = useDragToCreateGesture({
-    mode: dragToCreateMode,
-  });
+  const { gesture: dragEventGesture, isDragging: isDraggingEvent } =
+    useDragEventGesture();
+  const { isDragging: isDraggingCreate, gesture: dragToCreateGesture } =
+    useDragToCreateGesture({
+      mode: dragToCreateMode,
+    });
 
   const _onLayout = (event: LayoutChangeEvent) => {
     scrollVisibleHeight.current = event.nativeEvent.layout.height;
@@ -219,8 +221,6 @@ const CalendarBody: React.FC<CalendarBodyProps> = ({
       allowDragToEdit,
       renderCustomHorizontalLine,
       dragToCreateMode,
-      verticalListRef,
-      gridListRef,
     }),
     [
       renderHour,
@@ -261,8 +261,6 @@ const CalendarBody: React.FC<CalendarBodyProps> = ({
       allowDragToEdit,
       renderCustomHorizontalLine,
       dragToCreateMode,
-      verticalListRef,
-      gridListRef,
     ]
   );
 
@@ -283,6 +281,7 @@ const CalendarBody: React.FC<CalendarBodyProps> = ({
           pinchGestureEnabled={false}
           showsVerticalScrollIndicator={false}
           onLayout={_onLayout}
+          scrollEnabled={!isDraggingEvent && !isDraggingCreate}
           onScroll={_onScroll}
           refreshControl={
             onRefresh ? (
@@ -320,7 +319,11 @@ const CalendarBody: React.FC<CalendarBodyProps> = ({
                     ref={calendarListRef}
                     animatedRef={gridListRef}
                     count={calendarData.count}
-                    scrollEnabled={Platform.OS !== 'web'}
+                    scrollEnabled={
+                      !isDraggingEvent &&
+                      !isDraggingCreate &&
+                      Platform.OS !== 'web'
+                    }
                     width={calendarGridWidth}
                     height={maxTimelineHeight + EXTRA_HEIGHT * 2}
                     renderItem={_renderTimeSlots}

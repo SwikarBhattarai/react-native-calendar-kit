@@ -4,7 +4,6 @@ import {
   runOnUI,
   scrollTo,
   useAnimatedScrollHandler,
-  useSharedValue,
 } from 'react-native-reanimated';
 import { MILLISECONDS_IN_DAY, ScrollType } from '../constants';
 import { useActions } from '../context/ActionsProvider';
@@ -26,7 +25,6 @@ const useSyncedList = ({ id }: { id: ScrollType }) => {
   } = useCalendar();
   const notifyDateChanged = useNotifyDateChanged();
   const { onChange, onDateChanged } = useActions();
-  const isDragging = useSharedValue(false);
 
   const startDateUnix = useRef(0);
   const _updateScrolling = (isScrolling: boolean) => {
@@ -54,10 +52,6 @@ const useSyncedList = ({ id }: { id: ScrollType }) => {
 
   const onScroll = useAnimatedScrollHandler({
     onScroll: (event) => {
-      if (!isDragging.value) {
-        return;
-      }
-
       const x = event.contentOffset.x;
       offsetX.value = x;
       if (id === ScrollType.dayBar) {
@@ -67,18 +61,13 @@ const useSyncedList = ({ id }: { id: ScrollType }) => {
       }
     },
     onBeginDrag: () => {
-      isDragging.value = true;
       runOnJS(_updateScrolling)(true);
     },
     onMomentumBegin: () => {
-      if (isDragging.value) {
-        runOnJS(_updateMomentum)(true);
-      }
+      runOnJS(_updateMomentum)(true);
     },
     onMomentumEnd: () => {
-      if (isDragging.value) {
-        runOnJS(_onMomentumEnd)();
-      }
+      runOnJS(_onMomentumEnd)();
     },
   });
 
@@ -122,10 +111,7 @@ const useSyncedList = ({ id }: { id: ScrollType }) => {
         if (visibleDateUnix.current !== currentDate) {
           const dateIsoStr = dateTimeToISOString(parseDateTime(currentDate));
           onChange?.(dateIsoStr);
-          if (
-            triggerDateChanged.current &&
-            triggerDateChanged.current === currentDate
-          ) {
+          if (triggerDateChanged.current === currentDate) {
             triggerDateChanged.current = undefined;
             onDateChanged?.(dateIsoStr);
             notifyDateChanged(currentDate);

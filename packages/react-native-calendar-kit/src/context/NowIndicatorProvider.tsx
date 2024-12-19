@@ -41,7 +41,7 @@ interface NowIndicatorProviderProps {
 }
 
 const NowIndicatorProvider = ({ children }: NowIndicatorProviderProps) => {
-  const { timeZone } = useTimezone();
+  const { nowIndicatorTimezone: timeZone } = useTimezone();
   const nowRef = useLazyRef(() => getCurrentDatetime(timeZone));
 
   const [currentDateUnix, setCurrentDateUnix] = useState(nowRef.current.date);

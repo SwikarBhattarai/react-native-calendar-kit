@@ -39,6 +39,7 @@ import { useTimezone } from './TimeZoneProvider';
 export type DragEventContextProps = {
   dragStep: number;
   allowDragToEdit: boolean;
+  isDragging: boolean;
   draggingEvent?: SelectedEventType;
   dragStartMinutes: SharedValue<number>;
   dragDuration: SharedValue<number>;
@@ -70,7 +71,7 @@ export type DragEventContextProps = {
   allowDragToCreate: boolean;
   defaultDuration: number;
   isDraggingCreateAnim: SharedValue<boolean>;
-  isDragging: boolean;
+  isDraggingCreate: boolean;
   dragX: SharedValue<number>;
 };
 
@@ -281,10 +282,12 @@ const DragEventProvider: FC<
   const resetDragState = () => {
     setDraggingEvent(undefined);
     setIsDraggingCreate(false);
+    setIsDragging(false)
     runOnUI(() => {
       dragStartUnix.value = -1;
       dragDuration.value = -1;
       dragStartMinutes.value = -1;
+      isDraggingAnim.value = false;
       dragSelectedType.value = undefined;
       dragX.value = -1;
       roundedDragStartUnix.value = -1;
@@ -888,6 +891,7 @@ const DragEventProvider: FC<
       allowDragToCreate,
       defaultDuration,
       isDraggingCreateAnim,
+      isDraggingCreate,
       dragX,
     }),
     [
@@ -916,6 +920,7 @@ const DragEventProvider: FC<
       allowDragToCreate,
       defaultDuration,
       isDraggingCreateAnim,
+      isDraggingCreate,
       dragX,
     ]
   );

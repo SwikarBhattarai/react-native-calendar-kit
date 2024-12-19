@@ -89,6 +89,7 @@ const CalendarContainer: React.ForwardRefRenderFunction<
     allowPinchToZoom = false,
     initialTimeIntervalHeight = 60,
     timeZone: initialTimeZone,
+    nowIndicatorTimezone: nowTimezone,
     showWeekNumber = false,
     onChange,
     onDateChanged,
@@ -152,6 +153,15 @@ const CalendarContainer: React.ForwardRefRenderFunction<
     }
     return initialTimeZone || 'local';
   }, [initialTimeZone]);
+
+  const nowIndTimezone = useMemo(() => {
+    const parsedTimeZone = parseDateTime(undefined, { zone: nowTimezone });
+    if (!parsedTimeZone.isValid) {
+      console.warn('TimeZone is invalid, using local timeZone');
+      return 'local';
+    }
+    return nowTimezone || 'local';
+  }, [nowTimezone]);
 
   const hapticService = useRef(new HapticService()).current;
   const [hideWeekDays, setHideWeekDays] = useState(initialHideWeekDays ?? []);
@@ -560,10 +570,6 @@ const CalendarContainer: React.ForwardRefRenderFunction<
     return dateTimeToISOString(currentDate);
   });
 
-  const getCurrentOffsetY = useLatestCallback(() => {
-    return offsetY.value;
-  });
-
   useImperativeHandle(
     ref,
     () => ({
@@ -577,7 +583,6 @@ const CalendarContainer: React.ForwardRefRenderFunction<
       getEventByOffset,
       getSizeByDuration,
       getVisibleStart,
-      getCurrentOffsetY,
     }),
     [
       getDateStringByOffset,
@@ -590,7 +595,6 @@ const CalendarContainer: React.ForwardRefRenderFunction<
       setVisibleDate,
       zoom,
       getVisibleStart,
-      getCurrentOffsetY,
     ]
   );
 
@@ -750,7 +754,7 @@ const CalendarContainer: React.ForwardRefRenderFunction<
   return (
     <CalendarProvider value={value}>
       <LocaleProvider initialLocales={initialLocales} locale={locale}>
-        <TimezoneProvider timeZone={timeZone}>
+        <TimezoneProvider timeZone={timeZone} nowIndicatorTimezone={nowIndTimezone}>
           <NowIndicatorProvider>
             <ThemeProvider theme={theme}>
               <ActionsProvider {...actionsProps}>

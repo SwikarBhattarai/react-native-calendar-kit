@@ -117,9 +117,10 @@ const TimelineBoard = ({
     const minute = minutes % 60;
     if (dayUnix) {
       const baseDateTime = parseDateTime(dayUnix).set({ hour, minute });
-      const dateObj = forceUpdateZone(baseDateTime, timeZone);
+
+      const dateObj = forceUpdateZone(baseDateTime);
       const newProps: { dateTime: string; resourceId?: string } = {
-        dateTime: dateTimeToISOString(dateObj),
+        dateTime: `${dateObj}`,
       };
       if (resources) {
         const colWidth = columnWidthAnim.value / resources.length;
@@ -142,8 +143,8 @@ const TimelineBoard = ({
 
     if (dayUnix) {
       const baseDateTime = parseDateTime(dayUnix).set({ hour, minute });
-      const dateObj = forceUpdateZone(baseDateTime, timeZone);
-      const dateString = dateTimeToISOString(dateObj);
+      const dateObj = forceUpdateZone(baseDateTime);
+      const dateString = `${dateObj}`;
       const newProps: { dateTime: string; resourceId?: string } = {
         dateTime: dateString,
       };

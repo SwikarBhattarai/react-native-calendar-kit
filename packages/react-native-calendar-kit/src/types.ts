@@ -127,8 +127,6 @@ export interface CalendarKitHandle {
    * Get visible start date time
    */
   getVisibleStart: () => string;
-
-  getCurrentOffsetY: () => number;
 }
 
 /**
@@ -406,6 +404,10 @@ export interface CalendarProviderProps extends ActionsProviderProps {
 
   /** Custom time zone */
   timeZone?: string;
+
+  /** Custom  now indicator time zone */
+  nowIndicatorTimezone?: string;
+
 
   /** Show week number */
   showWeekNumber?: boolean;

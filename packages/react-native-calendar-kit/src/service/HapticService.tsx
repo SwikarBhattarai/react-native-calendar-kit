@@ -24,7 +24,7 @@ class HapticDependency {
 const hapticDependency = new HapticDependency();
 
 class HapticService {
-  public isHapticFeedbackEnabled: boolean = false;
+  public isHapticFeedbackEnabled: boolean = true;
   public useExpoHaptics: boolean = false;
 
   public setEnabled(isEnabled: boolean) {
@@ -53,8 +53,8 @@ class HapticService {
       );
     }
 
-    return ReactNativeHapticFeedbackProxy.trigger('impactMedium', {
-      enableVibrateFallback: true,
+    return ReactNativeHapticFeedbackProxy.trigger('soft', {
+      enableVibrateFallback: false,
       ignoreAndroidSystemSettings: true,
     });
   }
@@ -67,8 +67,8 @@ class HapticService {
       return ExpoHapticProxy.selectionAsync();
     }
 
-    return ReactNativeHapticFeedbackProxy.trigger('selection', {
-      enableVibrateFallback: true,
+    return ReactNativeHapticFeedbackProxy.trigger('soft', {
+      enableVibrateFallback: false,
       ignoreAndroidSystemSettings: true,
     });
   }

@@ -3,17 +3,19 @@ import type { PropsWithChildren } from 'react';
 
 export interface TimezoneContextProps {
   timeZone: string;
+  nowIndicatorTimezone: string,
 }
 
 const TimezoneContext = React.createContext<TimezoneContextProps | undefined>(
   undefined
 );
 
-const TimezoneProvider: React.FC<PropsWithChildren<{ timeZone: string }>> = ({
+const TimezoneProvider: React.FC<PropsWithChildren<{ timeZone: string, nowIndicatorTimezone: string }>> = ({
   children,
   timeZone,
+  nowIndicatorTimezone,
 }) => {
-  const value = useMemo(() => ({ timeZone }), [timeZone]);
+  const value = useMemo(() => ({ timeZone, nowIndicatorTimezone }), [timeZone, nowIndicatorTimezone]);
 
   return (
     <TimezoneContext.Provider value={value}>
